@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">O4Homes</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cityText">City:</string>
+    <string name="stateText">State:</string>
+    <string name="addressText">Address:</string>
+    <string name="priceText">Price:</string>
+    <string name="catsPolicyText">Cat Policy:</string>
+    <string name="dogsPolicy">Dog Policy:</string>
+    <string name="propertyTypeText">Property Type:</string>
+    <string name="bedsText">Beds:</string>
+    <string name="bathsText">Baths:</string>
+    <string name="dash">-</string>
+    <string name="houseImg">houseImage</string>
+    <string name="dollarSign">$ %1$s</string>
+
+    <string name="byPrice">By Price</string>
+    <string name="byType">By ApartmentType</string>
+    <string name="byDogPrefer">By Dog Preference</string>
+    <string name="byCatPrefer">By Cat Preference</string>
+    <string name="lowToHigh">Lowest to Highest</string>
+    <string name="highToLow">Highest to Lowest</string>
+    <string name="yesText">Yes</string>
+    <string name="noText">No</string>
+    <string name="customsear">Custom Search</string>
+    <string name="minPrice">Min</string>
+    <string name="maxPrice">Max</string>
+    <string name="go">Go</string>
+    <string name="favourites">Favourites</string>
+</resources>

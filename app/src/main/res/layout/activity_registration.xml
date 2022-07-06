@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:background="@drawable/gradient"
+    tools:context=".RegistrationActivity">
+
+    <!-- TextView for heading -->
+
+    <!-- Edit text for email -->
+
+    <!-- Edit text for password -->
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="SignUp"-->
+<!--        android:textSize="24sp" />-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_margin="15dp"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/textView_register_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please enter your details to Register on the Intern Housing App"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+        <TextView
+            android:id="@+id/textView_register_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_register_head"
+            android:layout_marginTop="10dp"
+            android:padding="6dp"
+            android:text="Full Name*"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editText_register_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_register_full_name"
+            android:background="@drawable/border"
+            android:hint="Enter your full name"
+            android:inputType="textPersonName"
+            android:padding="6dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_register_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText_register_full_name"
+            android:layout_marginTop="10dp"
+            android:padding="6dp"
+            android:text="Email*"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editText_register_email"
+            android:layout_width="321dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_register_email"
+            android:background="@drawable/border"
+            android:hint="Enter your email"
+            android:inputType="textEmailAddress"
+            android:padding="6dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_register_dob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText_register_email"
+            android:layout_marginTop="10dp"
+            android:padding="6dp"
+            android:text="Date of Birth (dd/mm/yyyy)*"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editText_register_dob"
+            android:layout_width="323dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_register_dob"
+            android:background="@drawable/border"
+            android:hint="Select your date of birth (dd/mm/yyyy)"
+            android:focusable="false"
+            android:inputType="date"
+            android:padding="6dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_register_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText_register_dob"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="29dp"
+            android:padding="6dp"
+            android:text="Gender*"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/textView_register_gender"
+            android:id="@+id/radio_group_register_gender">
+
+            <RadioButton
+                android:id="@+id/radio_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView_register_gender"
+                android:layout_marginTop="0dp"
+                android:text="Female"
+                android:textColor="#555555"
+                android:textSize="16sp" />
+
+
+
+            <RadioButton
+                android:id="@+id/radio_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/radio_female"
+                android:layout_alignBottom="@+id/textView_register_gender"
+                android:layout_marginStart="85dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="-49dp"
+                android:text="Male"
+                android:textColor="#555555"
+                android:textSize="16sp" />
+
+        </RadioGroup>
+
+
+
+
+        <TextView
+            android:id="@+id/textView_register_college"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText_register_dob"
+            android:layout_marginTop="86dp"
+            android:padding="6dp"
+            android:text="College"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editText_register_college"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_register_college"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/border"
+            android:hint="Enter College name"
+            android:inputType="text"
+            android:padding="6dp"
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_register_password"
+            android:layout_below="@id/editText_register_college"
+            android:text="Password*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/editText_register_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView_register_password"
+            android:background="@drawable/border"
+            android:hint="Enter your password"
+            android:inputType="textPassword"
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_register_Confirm_password"
+            android:layout_below="@id/editText_register_password"
+            android:text="Confirm Password*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/editText_register_Confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView_register_Confirm_password"
+            android:background="@drawable/border"
+            android:hint="Confirm your password"
+            android:inputType="textPassword"
+            android:textSize="16sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:layout_below="@+id/editText_register_Confirm_password"
+            android:layout_marginTop="10dp"
+            android:id="@+id/button_register"
+            android:text="Sign-Up"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone"/>
+
+
+
+
+    </RelativeLayout>
+
+
+
+<!--    <EditText-->
+<!--        android:id="@+id/email"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Enter your Email" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/passwd"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Enter your Password"-->
+<!--        android:inputType="textPassword" />-->
+
+<!--    &lt;!&ndash; Button for register with text "Register" &ndash;&gt;-->
+
+<!--    &lt;!&ndash; ProgressBar for loading time &ndash;&gt;-->
+
+<!--    <Button-->
+<!--        android:id="@+id/btnregister"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="SignUp" />-->
+
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progressbar"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:visibility="gone" />-->
+
+
+
+</ScrollView>

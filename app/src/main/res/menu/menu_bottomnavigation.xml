@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:id="@+id/homeMenuIId"
+              android:title="Home"
+              android:icon="@drawable/ic_homepage"/>
+        <item android:id="@+id/mapMenuId"
+              android:title="Map"
+              android:icon="@drawable/ic_map"/>
+        <item android:id="@+id/composeMenuId"
+              android:title="Intern Hub"
+              android:icon="@drawable/ic_hub"/>
+        <item android:id="@+id/Profile"
+              android:title="Profile"
+              android:icon="@drawable/ic_userprofile"/>
+</menu>

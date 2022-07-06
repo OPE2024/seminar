@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <item android:id="@+id/byPrice"
+            android:title="@string/byPrice"/>
+
+
+
+        <item android:id="@+id/byDogPref"
+            android:title="@string/byDogPrefer">
+            <menu>
+                <item android:id="@+id/dogYes"
+                    android:title="@string/yesText" />
+
+                <item android:id="@+id/dogNo"
+                    android:title="@string/noText" />
+            </menu>
+        </item>
+
+        <item android:id="@+id/byCatPref"
+                android:title="@string/byCatPrefer">
+
+                <menu>
+                    <item android:id="@+id/catYes"
+                        android:title="@string/yesText" />
+
+                    <item android:id="@+id/catNo"
+                        android:title="@string/noText" />
+                </menu>
+
+        </item>
+
+    <item android:id="@+id/checkFavourites"
+        android:title="@string/favourites">
+
+    </item>
+
+
+
+</menu>
