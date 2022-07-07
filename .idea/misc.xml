@@ -6,6 +6,7 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.13488059199461824" />
         <entry key="app/src/main/res/drawable-anydpi/ic_Gmap.xml" value="0.228" />
         <entry key="app/src/main/res/drawable-anydpi/ic_homepage.xml" value="0.228" />
+        <entry key="app/src/main/res/drawable/background_icon.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/border.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/gradient.xml" value="0.3655" />
         <entry key="app/src/main/res/drawable/ic_blue_heart.xml" value="0.1845" />
@@ -20,6 +21,7 @@
         <entry key="app/src/main/res/layout/activity_launch_screen.xml" value="0.5791666666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1317365269461078" />
+        <entry key="app/src/main/res/layout/activity_message.xml" value="0.5791666666666667" />
         <entry key="app/src/main/res/layout/activity_registration.xml" value="0.5153374233128835" />
         <entry key="app/src/main/res/layout/activity_second.xml" value="0.2758152173913043" />
         <entry key="app/src/main/res/layout/activity_upload_profile_pic.xml" value="0.3338541666666667" />
@@ -29,6 +31,7 @@
         <entry key="app/src/main/res/layout/fragment_compose.xml" value="0.365036231884058" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_home_details.xml" value="0.24583333333333332" />
+        <entry key="app/src/main/res/layout/fragment_intern_hub.xml" value="0.5126811594202898" />
         <entry key="app/src/main/res/layout/fragment_item_home.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.365036231884058" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.375" />

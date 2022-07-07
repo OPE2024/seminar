@@ -2,47 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true"
+    android:background="@color/white"
     tools:context="fragment.InternHub">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/listview"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/teal_200"
-            android:weightSum="10"
-            android:layout_alignParentBottom="true">
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText_sender"
-                android:layout_weight="2"
-                android:hint="Username"
-                android:textColor="@color/white">
-            </EditText>
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText_msg"
-                android:hint="msg"
-                android:layout_weight="6"
-                android:textColor="@color/white">
-            </EditText>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="SEND"
-                android:id="@+id/sendBtn"/>
-        </LinearLayout>
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageView_profile_dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/background_icon"
+        android:scaleType="centerCrop"
+        app:layout_constrainStart_toStartOf= "parent"
+        app:layout_constraintTop_toTopof= "parent"
+        app:riv_corner_radius="8dp"/>
 
 
-    </RelativeLayout>
 </FrameLayout>
