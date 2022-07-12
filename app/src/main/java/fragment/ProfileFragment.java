@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,8 @@ public class ProfileFragment extends Fragment {
     private String fullName, email, doB, gender,college;
     private ImageView imageView;
     private FirebaseAuth authProfile;
+
+    private String TAG = "ProfileFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -116,6 +119,8 @@ public class ProfileFragment extends Fragment {
         authProfile = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = authProfile.getCurrentUser();
 
+        Log.i(TAG, "Firebase User: " + firebaseUser);
+
         if (firebaseUser == null){
             Toast.makeText(getContext(), "Something went wrong! User's details are not available at the moment",
                     Toast.LENGTH_SHORT).show();
@@ -129,8 +134,9 @@ public class ProfileFragment extends Fragment {
     private void showUserProfile(FirebaseUser firebaseUser) {
         String userID = firebaseUser.getUid();
 
+        Log.i(TAG, "Firebase User ID: " + userID);
         //Extract user reference from registered users
-        DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Users");
+        DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
         referenceProfile.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -141,6 +147,8 @@ public class ProfileFragment extends Fragment {
                     doB = readUserDetails.doB;
                     gender = readUserDetails.gender;
                     college = readUserDetails.college;
+
+                    Log.i(TAG, "Fullname: " + fullName);
 
                     textViewWelcome.setText("Welcome, " + fullName + "!");
                     textViewFullName.setText(fullName);

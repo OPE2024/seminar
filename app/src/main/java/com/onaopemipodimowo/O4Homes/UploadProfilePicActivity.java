@@ -17,11 +17,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,7 +62,8 @@ public class UploadProfilePicActivity extends AppCompatActivity {
 
         //Set user's current DP in Imageview
         //Regular URIs.
-        Picasso.get().load(uri).into(imageViewUploadPic);
+        Glide.with(this).load(uri).transform(new CircleCrop()).into(imageViewUploadPic);
+//        Picasso.get().load(uri).transform(new CircleCrop()).into(imageViewUploadPic);
 
         // Choosing image to upload
         buttonUploadPicChoose.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +97,8 @@ public class UploadProfilePicActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() !=null){
             uriImage = data.getData();
+//            Toast.makeText(UploadProfilePicActivity.this, String.valueOf(uriImage), Toast.LENGTH_SHORT).show();
+
             imageViewUploadPic.setImageURI(uriImage);
         }
     }
@@ -110,12 +117,17 @@ public class UploadProfilePicActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             Uri downloadUri = uri;
+
                             firebaseUser = authProfile.getCurrentUser();
 
                             //Set the display image of the user after upload
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setPhotoUri(downloadUri).build();
                             firebaseUser.updateProfile(profileUpdates);
+
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                            databaseReference.child("imageURL").setValue(downloadUri.toString());
+
                         }
                     });
 

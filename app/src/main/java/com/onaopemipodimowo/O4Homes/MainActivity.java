@@ -16,21 +16,28 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
-import fragment.InternHub;
+import java.util.HashMap;
+
+import fragment.ChatlistFragment;
 import fragment.HomeFragment;
 import fragment.MapFragment;
 import fragment.ProfileFragment;
+import fragment.UsersFragment;
 
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
-    private static final int NUM_PAGES=4;
+    private static final int NUM_PAGES=5;
     private ViewPager2 viewPager2;
     private FragmentStateAdapter pageAdapter;
     private FirebaseAuth authProfile;
-//    boolean home;
+    DatabaseReference reference;
+
+    //    boolean home;
 //    private RecyclerView list;
 //    private TextView mTextViewResult;
 //    private String myResponse;
@@ -82,11 +89,16 @@ public class MainActivity extends AppCompatActivity {
                }
                if (item.getItemId()==R.id.composeMenuId){
                    viewPager2.setCurrentItem(2);
-                   ;
+
+                   return true;
+               }
+               if (item.getItemId()==R.id.User){
+                   viewPager2.setCurrentItem(3);
                    return true;
                }
                if (item.getItemId()==R.id.Profile){
-                   viewPager2.setCurrentItem(3);
+                   Toast.makeText(MainActivity.this, "PROFILE CLICKED", Toast.LENGTH_SHORT).show();
+                   viewPager2.setCurrentItem(4);
                    return true;
                }
                return true;
@@ -113,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
                     bottomNavigationView.setSelectedItemId(R.id.composeMenuId);
                 }
                 if (position==3){
+                    bottomNavigationView.setSelectedItemId(R.id.User);
+                }
+                if (position==4){
                     bottomNavigationView.setSelectedItemId(R.id.Profile);
                 }
 
@@ -135,9 +150,12 @@ public class MainActivity extends AppCompatActivity {
                      fragment = new MapFragment();
                      break;
                 case 2:
-                    fragment = new InternHub();
+                    fragment = new ChatlistFragment();
                     break;
                 case 3:
+                    fragment = new UsersFragment();
+                    break;
+                case 4:
                     fragment = new ProfileFragment();
                     break;
                 default:
@@ -199,21 +217,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
-        }/* else if (id == R.id.menu_update_profile){
-            Intent intent = new Intent(MainActivity.this, UpdateProfileActivity.class);
-            startActivity(intent);
-        }else if (id == R.id.menu_update_email){
-            Intent intent = new Intent(MainActivity.this, UpdateEmailActivity.class);
-            startActivity(intent);
-        }else if (id == R.id.menu_settings){
-            Toast.makeText(MainActivity.this, "menu_settings", Toast.LENGTH_SHORT).show();
-        }else if (id == R.id.menu_change_password){
-            Intent intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
-            startActivity(intent);
-        }else if (id == R.id.menu_delete_profile){
-            Intent intent = new Intent(MainActivity.this, DeleteProfileActivty.class);
-            startActivity(intent);
-        }*/ else if (id == R.id.menu_logout){
+        } else if (id == R.id.menu_logout){
             authProfile.signOut();
             Toast.makeText(MainActivity.this,"Logged Out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(MainActivity.this,LoginActivity.class);
@@ -228,6 +232,25 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void status(String status){
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        status("online");
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        status("offline");
+    }
 
 }
 
