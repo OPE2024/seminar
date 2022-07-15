@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,19 +31,26 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.snappydb.DB;
+import com.snappydb.DBFactory;
+import com.snappydb.SnappydbException;
 
 import java.util.Calendar;
 
 public class RegistrationActivity extends AppCompatActivity {
-//    private EditText emailTextView, passwordTextView;
+    //    private EditText emailTextView, passwordTextView;
 //    private Button Btn;
 //    private ProgressBar progressbar;
 //    private FirebaseAuth mAuth;
-    private EditText editTextRegisterFullName,editTextRegisterEmail,editTextRegisterDoB,editTextRegisterCollege,editTextRegisterPwd,editTextRegisterConfirmPwd;
+    private EditText editTextRegisterFullName,editTextRegisterEmail,editTextRegisterDoB,editTextRegisterCollege,editTextRegisterCity,editTextRegisterStateCode,editTextRegisterPwd,editTextRegisterConfirmPwd;
     private ProgressBar progressBar;
     private RadioGroup radioGroupRegisterGender;
     private RadioButton radioButtonRegisterGenderSelected;
     private DatePickerDialog picker;
+    private FirebaseFirestore db;
     private static final String TAG= "RegisterActivity";
 
 
@@ -49,6 +58,8 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        db = FirebaseFirestore.getInstance();
 
         getSupportActionBar().setTitle("Register");
         Toast.makeText(RegistrationActivity.this, "You can Register now", Toast.LENGTH_LONG).show();
@@ -58,6 +69,8 @@ public class RegistrationActivity extends AppCompatActivity {
         editTextRegisterEmail = findViewById(R.id.editText_register_email);
         editTextRegisterDoB = findViewById(R.id.editText_register_dob);
         editTextRegisterCollege = findViewById(R.id.editText_register_college);
+        editTextRegisterCity = findViewById(R.id.editText_register_city);
+        editTextRegisterStateCode = findViewById(R.id.editText_register_state_code);
         editTextRegisterPwd = findViewById(R.id.editText_register_password);
         editTextRegisterConfirmPwd = findViewById(R.id.editText_register_Confirm_password);
 
@@ -78,7 +91,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 picker = new DatePickerDialog(RegistrationActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            editTextRegisterDoB.setText(dayOfMonth + "/" +(month + 1) + "/" + year );
+                        editTextRegisterDoB.setText(dayOfMonth + "/" +(month + 1) + "/" + year );
                     }
                 }, year, month, day);
                 picker.show();
@@ -97,6 +110,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 String textEmail = editTextRegisterEmail.getText().toString();
                 String textDoB = editTextRegisterDoB.getText().toString();
                 String textCollege = editTextRegisterCollege.getText().toString();
+                String textCity = editTextRegisterCity.getText().toString();
+                String textStateCode = editTextRegisterStateCode.getText().toString();
                 String textPwd = editTextRegisterPwd.getText().toString();
                 String textConfirmPwd = editTextRegisterConfirmPwd.getText().toString();
                 String textGender; // cannot obtain the value before verifying if any button was selected or not
@@ -125,7 +140,15 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(RegistrationActivity.this, "Please enter the name of your College", Toast.LENGTH_LONG).show();
                     editTextRegisterCollege.setError("College name is required");
                     editTextRegisterCollege.requestFocus();
-                }else if (TextUtils.isEmpty(textPwd)){
+                }else if(TextUtils.isEmpty(textCity)){
+                    Toast.makeText(RegistrationActivity.this, "Please enter the name of your City", Toast.LENGTH_LONG).show();
+                    editTextRegisterCity.setError("City name is required");
+                    editTextRegisterCity.requestFocus();
+                }else if(TextUtils.isEmpty(textStateCode)){
+                    Toast.makeText(RegistrationActivity.this, "Please enter the your state code", Toast.LENGTH_LONG).show();
+                    editTextRegisterStateCode.setError("State code is required");
+                    editTextRegisterStateCode.requestFocus();
+                } else if (TextUtils.isEmpty(textPwd)){
                     Toast.makeText(RegistrationActivity.this, "Please enter your password", Toast.LENGTH_LONG).show();
                     editTextRegisterPwd.setError("Password is required");
                     editTextRegisterPwd.requestFocus();
@@ -147,7 +170,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 }else {
                     textGender = radioButtonRegisterGenderSelected.getText().toString();
                     progressBar.setVisibility(View.VISIBLE);
-                    registerUser(textFullName, textEmail, textDoB, textGender, textCollege, textPwd);
+                    registerUser(textFullName, textEmail, textDoB, textGender, textCollege, textCity, textStateCode, textPwd);
 
                 }
 
@@ -174,7 +197,7 @@ public class RegistrationActivity extends AppCompatActivity {
 //        });
     }
     // Register user using the credentials given
-    private void registerUser(String textFullName, String textEmail, String textDoB, String textGender, String textCollege, String textPwd) {
+    private void registerUser(String textFullName, String textEmail, String textDoB, String textGender, String textCollege, String textCity, String textStateCode, String textPwd) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         // Create User Profile
@@ -182,6 +205,18 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
+
+                    try {
+                        DB snappydb = DBFactory.open(getApplicationContext());
+                        snappydb.put("city",textCity);
+                        snappydb.put("stateCode",textStateCode);
+                        snappydb.close();
+
+                    } catch (SnappydbException e) {
+                        e.printStackTrace();
+                    }
+
+
                     Toast.makeText(RegistrationActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
                     FirebaseUser firebaseUser = auth.getCurrentUser();
 
@@ -190,10 +225,14 @@ public class RegistrationActivity extends AppCompatActivity {
                     firebaseUser.updateProfile(profileChangeRequest);
 
                     //Enter User Data into the firebase Realtime Database;
-                    ReadWriteUserDetails writeUsersDetails = new ReadWriteUserDetails(textDoB,textGender,textCollege,textFullName,firebaseUser.getUid(),"default", textFullName.toLowerCase(), "offline");
+                    ReadWriteUserDetails writeUsersDetails = new ReadWriteUserDetails(textDoB,textGender,textCollege,textCity,textStateCode,textFullName,firebaseUser.getUid(),"default", textFullName.toLowerCase(), "offline");
+
+                    //Enter User Data into the firebase firestore ;
+                    addDataToFirestore(textDoB,textGender,textCollege,textCity,textStateCode,textFullName,firebaseUser.getUid(),"default", textFullName.toLowerCase(), "offline");
 
                     // Enter User reference from database for Registered Users
                     DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+
 
                     referenceProfile.child(firebaseUser.getUid()).setValue(writeUsersDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -205,12 +244,12 @@ public class RegistrationActivity extends AppCompatActivity {
                                 firebaseUser.sendEmailVerification();
                                 Toast.makeText(RegistrationActivity.this, "Successful Registration", Toast.LENGTH_LONG).show();
 
-                    /// Open user Profile successful registration
-                    Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-                    //To prevent User from returning back to register Activity on pressing back button after registration
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish(); //to close registration activity
+                                /// Open user Profile successful registration
+                                Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                                //To prevent User from returning back to register Activity on pressing back button after registration
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish(); //to close registration activity
                             }else {
                                 Toast.makeText(RegistrationActivity.this, "User registration failed.Please try again", Toast.LENGTH_LONG).show();
                             }
@@ -239,6 +278,35 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void addDataToFirestore(String textDoB, String textGender, String textCollege, String textCity, String textStateCode, String username, String id, String imageURL, String search, String status) {
+
+        // creating a collection reference
+        // for our Firebase Firetore database.
+        DocumentReference dbUsers = db.collection("Users").document(id);
+
+        // adding our data to our courses object class.
+        ReadWriteUserDetails readWriteUserDetails = new ReadWriteUserDetails(textDoB, textGender, textCollege, textCity, textStateCode, username,  id,  imageURL,  search,  status);
+
+        // below method is use to add data to Firebase Firestore.
+        dbUsers.set(readWriteUserDetails)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        // after the data addition is successful
+                        // we are displaying a success toast message.
+                        Toast.makeText(getApplicationContext(), "Your details have been added to Firebase Firestore", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // this method is called when the data addition process is failed.
+                        // displaying a toast message when data addition is failed.
+                        Toast.makeText(getApplicationContext(), "Fail to add user details \n" + e, Toast.LENGTH_SHORT).show();
+                        Log.d("fireatore", e.getMessage().toString());
+                    }
+                });
     }
 //    private void registerNewUser()
 //    {

@@ -79,6 +79,12 @@ public class MessageActivity extends AppCompatActivity {
         String userid = intent.getStringExtra("userid");
         Log.i(TAG, "Gotten user: " + userid);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(intent.hasExtra("listingId")){
+            String listingId = intent.getStringExtra("listingId");
+            etSend.setText("I would like to rent a home with listing id "+listingId);
+        }
+
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -11,7 +11,7 @@
               android:icon="@drawable/ic_hub"/>
         <item android:id="@+id/User"
                 android:title="Users"
-                android:icon="@mipmap/ic_launcher"/>
+                android:icon="@drawable/ic_users"/>
         <item android:id="@+id/Profile"
               android:title="Profile"
               android:icon="@drawable/ic_userprofile"/>

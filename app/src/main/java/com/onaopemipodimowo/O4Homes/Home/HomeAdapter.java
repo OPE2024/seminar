@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.onaopemipodimowo.O4Homes.Favourites.FavouriteList;
 import com.onaopemipodimowo.O4Homes.MainActivity;
+import com.onaopemipodimowo.O4Homes.MessageActivity;
 import com.onaopemipodimowo.O4Homes.R;
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +50,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
     public HomeAdapter(Context context, List<Home>homes /*List<Home>homeListFiltered*/){
         this.context = context;
         this.homes = homes;
-       // this.homeListFiltered = homeListFiltered;
+        // this.homeListFiltered = homeListFiltered;
     }
 
     // method for filtering our recyclerview items.
@@ -157,7 +159,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
 
             }
         });
-        }
+
+        holder.rentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MessageActivity.class);
+                intent.putExtra("userid", "WymgYKwO0Nbr2kSPBy6poI20Qj73");
+                intent.putExtra("listingId", data.getListing_id());
+                context.startActivity(intent);
+            }
+        });
+    }
 
     @Override
     public int getItemCount(){return homes.size();}
@@ -166,6 +178,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
         ImageView cardImage, likeBtn;
         ImageView ivMapIcon;
         CardView houseCardView;
+        Button rentBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -196,6 +209,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
             tvBedsMax = itemView.findViewById(R.id.tvBeds2);
             cardImage = itemView.findViewById(R.id.cardImage);
             likeBtn = itemView.findViewById(R.id.likeBtn);
+            rentBtn = itemView.findViewById(R.id.enqureBtn);
 
         }
 

@@ -15,11 +15,11 @@
     <!-- Edit text for email -->
 
     <!-- Edit text for password -->
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="SignUp"-->
-<!--        android:textSize="24sp" />-->
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="SignUp"-->
+    <!--        android:textSize="24sp" />-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="600dp"
@@ -131,8 +131,6 @@
                 android:textColor="#555555"
                 android:textSize="16sp" />
 
-
-
             <RadioButton
                 android:id="@+id/radio_male"
                 android:layout_width="wrap_content"
@@ -147,8 +145,6 @@
                 android:textSize="16sp" />
 
         </RadioGroup>
-
-
 
 
         <TextView
@@ -173,11 +169,58 @@
             android:inputType="text"
             android:padding="6dp"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_register_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText_register_college"
+            android:layout_marginTop="10dp"
+            android:padding="6dp"
+            android:text="City"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editText_register_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_register_city"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/border"
+            android:hint="Enter City name"
+            android:inputType="text"
+            android:padding="6dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_register_state_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText_register_city"
+            android:layout_marginTop="10dp"
+            android:padding="6dp"
+            android:text="State Code "
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editText_register_state_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_register_state_code"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/border"
+            android:hint="Enter State code (NY)"
+            android:inputType="text"
+            android:padding="6dp"
+            android:textSize="16sp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView_register_password"
-            android:layout_below="@id/editText_register_college"
+            android:layout_below="@id/editText_register_state_code"
             android:text="Password*"
             android:textColor="#555555"
             android:padding="6dp"
@@ -239,34 +282,34 @@
 
 
 
-<!--    <EditText-->
-<!--        android:id="@+id/email"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Enter your Email" />-->
+    <!--    <EditText-->
+    <!--        android:id="@+id/email"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="Enter your Email" />-->
 
-<!--    <EditText-->
-<!--        android:id="@+id/passwd"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Enter your Password"-->
-<!--        android:inputType="textPassword" />-->
+    <!--    <EditText-->
+    <!--        android:id="@+id/passwd"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="Enter your Password"-->
+    <!--        android:inputType="textPassword" />-->
 
-<!--    &lt;!&ndash; Button for register with text "Register" &ndash;&gt;-->
+    <!--    &lt;!&ndash; Button for register with text "Register" &ndash;&gt;-->
 
-<!--    &lt;!&ndash; ProgressBar for loading time &ndash;&gt;-->
+    <!--    &lt;!&ndash; ProgressBar for loading time &ndash;&gt;-->
 
-<!--    <Button-->
-<!--        android:id="@+id/btnregister"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="SignUp" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/btnregister"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="SignUp" />-->
 
-<!--    <ProgressBar-->
-<!--        android:id="@+id/progressbar"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:visibility="gone" />-->
+    <!--    <ProgressBar-->
+    <!--        android:id="@+id/progressbar"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:visibility="gone" />-->
 
 
 
