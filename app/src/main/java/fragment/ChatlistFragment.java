@@ -28,8 +28,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.onaopemipodimowo.O4Homes.Chat;
 import com.onaopemipodimowo.O4Homes.Model.User;
+import com.onaopemipodimowo.O4Homes.Notifications.Token;
 import com.onaopemipodimowo.O4Homes.R;
 import com.onaopemipodimowo.O4Homes.UserAdapter;
 
@@ -41,32 +43,24 @@ import java.util.List;
 public class ChatlistFragment extends Fragment {
 
     private String TAG = "ChatlistFragment";
-
-
-
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
     private List<User> mUsers;
-    FirebaseUser fuser;
-    DatabaseReference reference;
+    FirebaseUser firebaseUser;
+    DatabaseReference dbReference;
     private List<String> usersList;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chatlist, container, false);
-
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         usersList = new ArrayList<>();
-
-        reference = FirebaseDatabase.getInstance().getReference("Chats");
-        reference.addValueEventListener(new ValueEventListener() {
+        dbReference = FirebaseDatabase.getInstance().getReference("Chats");
+        dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
@@ -74,10 +68,10 @@ public class ChatlistFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
 
-                    if (chat.getSender().equals(fuser.getUid())){
+                    if (chat.getSender().equals(firebaseUser.getUid())){
                         usersList.add(chat.getReceiver());
                     }
-                    if (chat.getReceiver().equals(fuser.getUid())){
+                    if (chat.getReceiver().equals(firebaseUser.getUid())){
                         usersList.add(chat.getSender());
                     }
 
@@ -90,14 +84,22 @@ public class ChatlistFragment extends Fragment {
 
             }
         });
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
+
         return view;
+    }
+
+    private void updateToken(String token){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Token");
+        Token token1 = new Token(token);
+        reference.child(firebaseUser.getUid()).setValue(token1);
     }
 
     private void readChats(){
         mUsers = new ArrayList<>();
-
-        reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.addValueEventListener(new ValueEventListener() {
+        dbReference = FirebaseDatabase.getInstance().getReference("Users");
+        dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
@@ -117,12 +119,6 @@ public class ChatlistFragment extends Fragment {
                                 if (!mUsers.contains(user)) {
                                     mUsers.add(user);
                                 }
-//                                for (User user1 : mUsers){
-//                                    if (!user.getId().equals(user1.getId())){
-//                                        mUsers.add(user);
-//                                        break;
-//                                    }
-//                                }
                             }else {
                                 mUsers.add(user);
                             }
@@ -139,6 +135,4 @@ public class ChatlistFragment extends Fragment {
             }
         });
     }
-
-
 }

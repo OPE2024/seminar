@@ -48,17 +48,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private Context mContext;
     private List<Chat> mChat;
-    private String imageurl;
+    private String imageUrl;
 
-    ValueEventListener feelingListener;
-    ValueEventListener editListener;
-    SharedPreferences sharedPreferences;
-    FirebaseUser fuser;
+
+    FirebaseUser firebaseUser;
 
     public MessageAdapter(@NonNull Context mContext, List<Chat> mChat, String imageurl) {
         this.mContext = mContext;
         this.mChat = mChat;
-        this.imageurl = imageurl;
+        this.imageUrl = imageurl;
 
     }
 
@@ -83,14 +81,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Chat chat = mChat.get(position);
 
         holder.showMessage.setText(chat.getMessage());
-        if (imageurl.equals("")) {
+        if (imageUrl.equals("")) {
             Glide.with(mContext)
                     .load(R.drawable.ic_profile)
                     .transform(new CircleCrop())
                     .into(holder.profile_image);
         } else {
             Glide.with(mContext)
-                    .load(imageurl)
+                    .load(imageUrl)
                     .transform(new CircleCrop())
                     .into(holder.profile_image);
 
@@ -99,15 +97,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
 
-//        if (position == mChat.size()-1) {
-//            if (chat.isIsseen()) {
-//                holder.tvSeen.setText("Seen");
-//            } else {
-//                holder.tvSeen.setText("Delivered");
-//            }
-//        } else {
-//            holder.tvSeen.setVisibility(View.GONE);
-//        }
+        if (position == mChat.size()-1) {
+            if (chat.isIsseen()) {
+                holder.tvSeen.setText("Seen");
+            } else {
+                holder.tvSeen.setText("Delivered");
+            }
+        } else {
+            holder.tvSeen.setVisibility(View.GONE);
+        }
 
     }
 
@@ -138,9 +136,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-        Log.i(TAG, "Fuser; " + fuser + "now: " + mChat.get(position).getSender());
-        if (mChat.get(position).getSender().equals(fuser.getUid())) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        Log.i(TAG, "Fuser; " + firebaseUser + "now: " + mChat.get(position).getSender());
+        if (mChat.get(position).getSender().equals(firebaseUser.getUid())) {
             return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_LEFT;

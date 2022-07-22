@@ -44,6 +44,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.onaopemipodimowo.O4Homes.BuildConfig;
 import com.onaopemipodimowo.O4Homes.Favourites.FavouriteActivity;
 import com.onaopemipodimowo.O4Homes.Favourites.FavouriteDatabase;
 import com.onaopemipodimowo.O4Homes.Home.Home;
@@ -71,14 +72,11 @@ import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
     private HomeAdapter adapter;
-
     private List<Home> homes;
     private ArrayList<Home> homesFiltered;
     private String TAG = "HomeFragment";
-
     private RecyclerView list;
     private String myResponse1, city, stateId;
-
     private ImageView filterImage;
     private EditText minPrice, maxPrice;
     private RelativeLayout setPriceLayout, includeLayout;
@@ -88,20 +86,13 @@ public class HomeFragment extends Fragment {
     FirebaseUser firebaseUser;
     private FirebaseFirestore db;
     int minimumPrice, maximumPrice;
-
-
     public static FavouriteDatabase favouriteDatabase;
-
-    // MainClass main = new MainClass(getContext());
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
 
         list = view.findViewById(R.id.list);
         filterImage = view.findViewById(R.id.filterImage);
@@ -121,9 +112,7 @@ public class HomeFragment extends Fragment {
         String userID = firebaseUser.getUid();
 
         getDetFromFirestore(userID);
-        storeData();
-
-
+        fetchData();
 
         // Set the adapter on the recycler view
         adapter = new HomeAdapter(getContext(), homes);
@@ -135,21 +124,13 @@ public class HomeFragment extends Fragment {
 
                 Intent intent = new Intent(getContext(), HomeDetailsActivity.class);
                 intent.putExtra("listing_id", listingId);
-                //Fix Later keeps crashing  //startActivity(intent);
             }
         });
 
         list.setAdapter(adapter);
 
-
-
         //Set a layout Manager on the recycler view
         list.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-
-
-
 
         favouriteDatabase= Room.databaseBuilder(getContext(),FavouriteDatabase.class,"housefavdb").allowMainThreadQueries().build();
 
@@ -185,10 +166,8 @@ public class HomeFragment extends Fragment {
                     return;
                 }
 
-
                 setPriceLayout.setVisibility(View.GONE);
                 includeLayout.setVisibility(View.VISIBLE);
-
 
                 //get text from textinput
                 minimumPrice = Integer.parseInt(minPrice.getText().toString().trim());
@@ -204,12 +183,7 @@ public class HomeFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return view;
-
-
-
     }
-
-
 
     //method to filter items in recycler view on search
     private void filter(String text) {
@@ -236,8 +210,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
-
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(getContext(), v);
         MenuInflater inflater = popup.getMenuInflater();
@@ -252,16 +224,16 @@ public class HomeFragment extends Fragment {
                     setPriceLayout.setVisibility(View.VISIBLE);
                 }
                 if (item.getItemId() == R.id.dogYes){
-                    filterDogPreference("true");
+                    filterPetPreference("true");
                 }
                 if (item.getItemId() == R.id.dogNo){
-                    filterDogPreference("false");
+                    filterPetPreference("false");
                 }
                 if (item.getItemId() == R.id.catNo){
-                    filterCatPreference("false");
+                    filterPetPreference("false");
                 }
                 if (item.getItemId() == R.id.catYes){
-                    filterCatPreference("true");
+                    filterPetPreference("true");
                 }
                 if (item.getItemId() == R.id.checkFavourites){
                     Intent intent = new Intent(getContext(), FavouriteActivity.class);
@@ -274,9 +246,6 @@ public class HomeFragment extends Fragment {
 
         popup.show();
     }
-
-
-
 
     //method to filter price based on users input
     public void filterPrice(int minPrice, int maxPrice){
@@ -297,6 +266,84 @@ public class HomeFragment extends Fragment {
                 if(resultArray.getJSONObject(i).getInt("list_price_min") >= minPrice  && resultArray.getJSONObject(i).getInt("list_price_max") <= maxPrice) {
 
                     JSONObject resultObject = resultArray.getJSONObject(i);
+
+                    JSONObject locationObject = resultObject.getJSONObject("location");
+                    JSONObject addressObject = locationObject.getJSONObject("address");
+
+                    JSONObject descriptionObject = resultObject.getJSONObject("description");
+                    JSONObject primaryPhotoObject = resultObject.getJSONObject("primary_photo");
+
+                    JSONArray photosArray = resultObject.getJSONArray("photos");
+
+
+                    JSONObject photoObject1 = photosArray.getJSONObject(0);
+                    JSONObject photoObject2 = photosArray.getJSONObject(1);
+                    JSONObject photoObject3 = photosArray.getJSONObject(2);
+
+                    JSONObject petPolicyObject = resultObject.getJSONObject("pet_policy");
+
+
+                    homesFiltered.add(new Home(
+                            resultObject.getString("listing_id"),
+                            descriptionObject.getString("name"),
+                            addressObject.getString("city"),
+                            addressObject.getString("state_code"),
+                            resultObject.getString("permalink"),
+                            descriptionObject.getString("type"),
+                            resultObject.getString("list_price_min"),
+                            resultObject.getString("list_price_max"),
+                            primaryPhotoObject.getString("href"),
+                            photoObject1.getString("href"),
+                            photoObject2.getString("href"),
+                            photoObject3.getString("href"),
+                            petPolicyObject.getBoolean("cats"),
+                            petPolicyObject.getBoolean("dogs"),
+                            descriptionObject.getInt("baths_min"),
+                            descriptionObject.getInt("baths_max"),
+                            descriptionObject.getInt("beds_min"),
+                            descriptionObject.getInt("beds_max")
+                    ));
+
+                }
+            }
+
+            setAdapter(homesFiltered);
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //method to filter pets based on users input
+    public void filterPetPreference(String preference){
+        filterData("pet_policy","dogs",preference);
+        filterData("pet_policy", "cats", preference);
+    }
+
+
+    //method to filter data based on users input
+    public void filterData(String jsonObjectName, String valueName, String preference) {
+        homesFiltered = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(myResponse1);
+
+            JSONObject dataObject = jsonObject.getJSONObject("data");
+            JSONObject homeSearchObject = dataObject.getJSONObject("home_search");
+
+
+            JSONArray resultArray = homeSearchObject.getJSONArray("results");
+
+            for (int i = 0; i < resultArray.length(); i++) {
+
+
+                Log.d("Work", String.valueOf(resultArray.getJSONObject(i).getJSONObject(jsonObjectName).getString(valueName)));
+
+
+                if (resultArray.getJSONObject(i).getJSONObject(jsonObjectName).getString(valueName).contains(preference)) {
+
+
+                    JSONObject resultObject = resultArray.getJSONObject(i);
+                    JSONObject petPolicyObject = resultObject.getJSONObject("pet_policy");
                     JSONObject locationObject = resultObject.getJSONObject("location");
                     JSONObject addressObject = locationObject.getJSONObject("address");
 
@@ -309,8 +356,6 @@ public class HomeFragment extends Fragment {
                     JSONObject photoObject1 = photosArray.getJSONObject(0);
                     JSONObject photoObject2 = photosArray.getJSONObject(1);
                     JSONObject photoObject3 = photosArray.getJSONObject(2);
-
-                    JSONObject petPolicyObject = resultObject.getJSONObject("pet_policy");
 
 
                     homesFiltered.add(new Home(
@@ -337,18 +382,22 @@ public class HomeFragment extends Fragment {
                 }
             }
 
+            setAdapter(homesFiltered);
 
-        }catch (JSONException e) {
+
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public void setAdapter(ArrayList<Home> homesFiltered){
         // Set the adapter on the recycler view
         adapter = new HomeAdapter(getContext(), homesFiltered);
-
         adapter.setOnItemClickListener(new HomeAdapter.OnItemClickListener() {
             @Override
             public void onClick(Home items) {
-                String listingId =  items.getListing_id();
+                String listingId = items.getListing_id();
 
                 Intent intent = new Intent(getContext(), HomeDetailsActivity.class);
                 intent.putExtra("listing_id", listingId);
@@ -356,187 +405,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         list.setAdapter(adapter);
-
     }
 
-
-
-
-    //method to filter price based on users input
-    public void filterDogPreference(String preference){
-        homesFiltered = new ArrayList<>();
-
-        try {
-            JSONObject jsonObject = new JSONObject(myResponse1);
-
-            JSONObject dataObject = jsonObject.getJSONObject("data");
-            JSONObject homeSearchObject = dataObject.getJSONObject("home_search");
-
-
-            JSONArray resultArray = homeSearchObject.getJSONArray("results");
-
-            for (int i = 0; i < resultArray.length(); i++) {
-
-
-                Log.d("Work", String.valueOf(resultArray.getJSONObject(i).getJSONObject("pet_policy").getString("dogs")));
-
-                //if result is equal to dogpreference specified save in the homeFiltered array
-                if(resultArray.getJSONObject(i).getJSONObject("pet_policy").getString("dogs").contains(preference)) {
-
-
-                    JSONObject resultObject = resultArray.getJSONObject(i);
-                    JSONObject petPolicyObject = resultObject.getJSONObject("pet_policy");
-                    JSONObject locationObject = resultObject.getJSONObject("location");
-                    JSONObject addressObject = locationObject.getJSONObject("address");
-
-                    JSONObject descriptionObject = resultObject.getJSONObject("description");
-                    JSONObject dataObject6 = resultObject.getJSONObject("primary_photo");
-
-                    JSONArray photosArray = resultObject.getJSONArray("photos");
-
-
-                    JSONObject photoObject1 = photosArray.getJSONObject(0);
-                    JSONObject photoObject2 = photosArray.getJSONObject(1);
-                    JSONObject photoObject3 = photosArray.getJSONObject(2);
-
-
-                    homesFiltered.add(new Home(
-                            resultObject.getString("listing_id"),
-                            descriptionObject.getString("name"),
-                            addressObject.getString("city"),
-                            addressObject.getString("state_code"),
-                            resultObject.getString("permalink"),
-                            descriptionObject.getString("type"),
-                            resultObject.getString("list_price_min"),
-                            resultObject.getString("list_price_max"),
-                            dataObject6.getString("href"),
-                            photoObject1.getString("href"),
-                            photoObject2.getString("href"),
-                            photoObject3.getString("href"),
-                            petPolicyObject.getBoolean("cats"),
-                            petPolicyObject.getBoolean("dogs"),
-                            descriptionObject.getInt("baths_min"),
-                            descriptionObject.getInt("baths_max"),
-                            descriptionObject.getInt("beds_min"),
-                            descriptionObject.getInt("beds_max")
-                    ));
-
-                }
-            }
-
-
-            // Set the adapter on the recycler view
-            adapter = new HomeAdapter(getContext(), homesFiltered);
-            adapter.setOnItemClickListener(new HomeAdapter.OnItemClickListener() {
-                @Override
-                public void onClick(Home items) {
-                    String listingId =  items.getListing_id();
-
-                    Intent intent = new Intent(getContext(), HomeDetailsActivity.class);
-                    intent.putExtra("listing_id", listingId);
-                    startActivity(intent);
-                }
-            });
-
-            list.setAdapter(adapter);
-
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-
-    }
-
-
-    //method to filter price based on users input
-    public void filterCatPreference(String preference){
-        homesFiltered = new ArrayList<>();
-
-        try {
-            JSONObject jsonObject = new JSONObject(myResponse1);
-
-            JSONObject dataObject = jsonObject.getJSONObject("data");
-            JSONObject homeSearchObject = dataObject.getJSONObject("home_search");
-
-
-            JSONArray resultArray = homeSearchObject.getJSONArray("results");
-
-            for (int i = 0; i < resultArray.length(); i++) {
-
-                //if result is equal to cat preference specified save in the homeFiltered array
-                if(resultArray.getJSONObject(i).getJSONObject("pet_policy").getString("cats").contains(preference)) {
-
-                    JSONObject resultObject = resultArray.getJSONObject(i);
-                    JSONObject locationObject = resultObject.getJSONObject("location");
-                    JSONObject addressObject = locationObject.getJSONObject("address");
-
-                    JSONObject descriptionObject = resultObject.getJSONObject("description");
-                    JSONObject dataObject6 = resultObject.getJSONObject("primary_photo");
-
-                    JSONArray photosArray = resultObject.getJSONArray("photos");
-
-
-                    JSONObject photoObject1 = photosArray.getJSONObject(0);
-                    JSONObject photoObject2 = photosArray.getJSONObject(1);
-                    JSONObject photoObject3 = photosArray.getJSONObject(2);
-
-                    JSONObject petPolicyObject = resultObject.getJSONObject("pet_policy");
-
-
-                    homesFiltered.add(new Home(
-                            resultObject.getString("listing_id"),
-                            descriptionObject.getString("name"),
-                            addressObject.getString("city"),
-                            addressObject.getString("state_code"),
-                            resultObject.getString("permalink"),
-                            descriptionObject.getString("type"),
-                            resultObject.getString("list_price_min"),
-                            resultObject.getString("list_price_max"),
-                            dataObject6.getString("href"),
-                            photoObject1.getString("href"),
-                            photoObject2.getString("href"),
-                            photoObject3.getString("href"),
-                            petPolicyObject.getBoolean("cats"),
-                            petPolicyObject.getBoolean("dogs"),
-                            descriptionObject.getInt("baths_min"),
-                            descriptionObject.getInt("baths_max"),
-                            descriptionObject.getInt("beds_min"),
-                            descriptionObject.getInt("beds_max")
-                    ));
-
-                }
-            }
-
-            // Set the adapter on the recycler view
-            adapter = new HomeAdapter(getContext(), homesFiltered);
-            adapter.setOnItemClickListener(new HomeAdapter.OnItemClickListener() {
-                @Override
-                public void onClick(Home items) {
-                    String listingId =  items.getListing_id();
-
-                    Intent intent = new Intent(getContext(), HomeDetailsActivity.class);
-                    intent.putExtra("listing_id", listingId);
-                    startActivity(intent);
-                }
-            });
-
-            list.setAdapter(adapter);
-
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-
-    }
-
-
-
-
-    public void storeData(){
+    public void fetchData(){
 
         OkHttpClient client = new OkHttpClient();
         boolean apikey = false;
@@ -548,7 +420,6 @@ public class HomeFragment extends Fragment {
             String stateCode=snappydb.get("stateCode");
 
             String url = "https://us-real-estate.p.rapidapi.com/v2/for-rent?city="+city+"&state_code="+stateCode;
-            //String url = "https://us-real-estate.p.rapidapi.com/v2/for-rent?city=Birmingham&state_code=AL";
 
             apikey = snappydb.exists(url);
             Log.d("DB", url);
@@ -558,37 +429,7 @@ public class HomeFragment extends Fragment {
                 Log.d("Url", myResponse1);
 
             } else {
-
-                Request request = new Request.Builder()
-                        .url(url)
-                        .get()
-                        .addHeader("X-RapidAPI-Key", "b9b6e83a73msh284bf2ee0af9f72p1b3302jsnbce6e1f38d7c")
-                        .addHeader("X-RapidAPI-Host", "us-real-estate.p.rapidapi.com")
-                        .build();
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    @Override
-                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        if (response.isSuccessful()){
-                            final String myResponse = response.body().string();
-                            Log.i(TAG,"JSON" + myResponse);
-                            try {
-                                DB snappydb = DBFactory.open(getContext());
-                                snappydb.put(url,myResponse);
-                                snappydb.close();
-                                storeData();
-                            } catch (SnappydbException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                    }
-                });
+                fetchDataFromApi(url);
             }
 
         } catch (SnappydbException e) {
@@ -596,6 +437,45 @@ public class HomeFragment extends Fragment {
         }
 
     }
+
+    public void fetchDataFromApi(String url){
+        OkHttpClient client = new OkHttpClient();
+
+
+        String consumerKey = BuildConfig.CONSUMER_KEY;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("X-RapidAPI-Key", consumerKey)
+                .addHeader("X-RapidAPI-Host", "us-real-estate.p.rapidapi.com")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()){
+                    final String myResponse = response.body().string();
+                    Log.i(TAG,"JSON" + myResponse);
+                    try {
+                        DB snappydb = DBFactory.open(getContext());
+                        snappydb.put(url,myResponse);
+                        snappydb.close();
+                        fetchData();
+                    } catch (SnappydbException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+    }
+
 
     public void getDetFromFirestore(String uid){
 
@@ -685,7 +565,7 @@ public class HomeFragment extends Fragment {
 
                     Intent intent = new Intent(getContext(), HomeDetailsActivity.class);
                     intent.putExtra("listing_id", listingId);
-                    //Fix Later keeps crashing  //startActivity(intent);
+                    startActivity(intent);
                 }
             });
 

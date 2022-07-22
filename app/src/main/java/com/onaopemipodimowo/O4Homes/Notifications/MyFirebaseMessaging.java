@@ -33,17 +33,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-
-        Log.i("fm","notification working" );
         String sented = remoteMessage.getData().get("sented");
         String user= remoteMessage.getData().get("user");
-
         SharedPreferences preferences = this.getSharedPreferences("PREFS", MODE_PRIVATE);
         String newCurrent = preferences.getString("currentuser", "none");
-
         SharedPreferences sharedPreferences = this.getSharedPreferences("o4homes", 0);
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.i("ope", "sented: "+sented+"current user: "+currentUser);
+
         if (currentUser != null && sented.equals(currentUser)) {
             if (!newCurrent.equals(user)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -65,7 +61,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification  = remoteMessage.getNotification();
 
-        int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+        int requestcode = Integer.parseInt(user.replaceAll("[\\D]", ""));
 
         Intent intent = new Intent(this, MessageActivity.class);
         Bundle bundle = new Bundle();
@@ -73,19 +69,19 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         intent.putExtras(bundle);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestcode, intent, PendingIntent.FLAG_IMMUTABLE);
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         OreoNotification oreoNotification = new OreoNotification(this);
         Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent, defaultSound, icon);
 
-        int i = 0;
-        if ( j > 0) {
-            i=j;
+        int id = 0;
+        if ( requestcode > 0) {
+            id=requestcode;
         }
 
-        oreoNotification.getManager().notify(i, builder.build());
+        oreoNotification.getManager().notify(id, builder.build());
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
@@ -96,13 +92,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String body = remoteMessage.getData().get("body");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
-        int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+        int requestcode = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, MessageActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("userFullId", user);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestcode, intent, PendingIntent.FLAG_IMMUTABLE);
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         assert icon != null;
@@ -115,12 +111,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
         NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
-        int i = 0;
-        if (j > 0){
-            i = j;
+        int id = 0;
+        if (requestcode > 0){
+            id = requestcode;
         }
 
-        noti.notify(i, builder.build());
+        noti.notify(id, builder.build());
     }
 
     @Override
