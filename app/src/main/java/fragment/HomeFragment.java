@@ -94,10 +94,11 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+
         list = view.findViewById(R.id.list);
         filterImage = view.findViewById(R.id.filterImage);
-        minPrice = view.findViewById(R.id.minPricetextField);
-        maxPrice = view.findViewById(R.id.maxPricetextField);
+//        minPrice = view.findViewById(R.id.minPricetextField);
+//        maxPrice = view.findViewById(R.id.maxPricetextField);
         setPriceLayout = view.findViewById(R.id.minMax);
         includeLayout = view.findViewById(R.id.include);
         priceGoBtn = view.findViewById(R.id.priceGoBtn);
@@ -112,7 +113,9 @@ public class HomeFragment extends Fragment {
         String userID = firebaseUser.getUid();
 
         getDetFromFirestore(userID);
+        Log.i(TAG, "Get 1st");
         fetchData();
+        Log.i(TAG, "Get 2nd");
 
         // Set the adapter on the recycler view
         adapter = new HomeAdapter(getContext(), homes);
@@ -208,6 +211,8 @@ public class HomeFragment extends Fragment {
             // list to our adapter class.
             adapter.filterList(filteredlist);
         }
+
+
     }
 
     public void showPopup(View v) {
@@ -409,30 +414,39 @@ public class HomeFragment extends Fragment {
     }
 
     public void fetchData(){
+        Log.i(TAG, "start fetching data");
 
         OkHttpClient client = new OkHttpClient();
         boolean apikey = false;
 
         try {
+            Log.i(TAG, "start trying");
             DB snappydb = DBFactory.open(requireContext());
+            Log.i(TAG, "finish snappyDB");
 
-            String city=snappydb.get("city");
-            String stateCode=snappydb.get("stateCode");
-
+//            String city = snappydb.get("city");
+//            String stateCode = snappydb.get("stateCode");
+            String city = "Columbia";
+            String stateCode = "SC";
+            Log.i(TAG, "finish snappyDBcity and statecode");
             String url = "https://us-real-estate.p.rapidapi.com/v2/for-rent?city="+city+"&state_code="+stateCode;
 
+            Log.i(TAG, "getting apikey");
             apikey = snappydb.exists(url);
-            Log.d("DB", url);
+            Log.i(TAG, "got api key");
+            Log.i(TAG, url);
             if (apikey){
                 myResponse1 = snappydb.get(url);
                 getDatafromDB();
-                Log.d("Url", myResponse1);
+                Log.i(TAG, myResponse1);
 
             } else {
+                Log.i(TAG, "TRYING SECOND FETCHING");
                 fetchDataFromApi(url);
             }
 
         } catch (SnappydbException e) {
+            Log.i(TAG, "start catching");
             e.printStackTrace();
         }
 
@@ -440,9 +454,11 @@ public class HomeFragment extends Fragment {
 
     public void fetchDataFromApi(String url){
         OkHttpClient client = new OkHttpClient();
+        Log.i(TAG, "start getting from API");
 
 
         String consumerKey = BuildConfig.CONSUMER_KEY;
+        Log.i(TAG, "Consumer key: " + consumerKey);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -554,6 +570,7 @@ public class HomeFragment extends Fragment {
 
             }
 
+            Log.i(TAG, "HOMES IN FRAG: " + homes.toString());
 
 
             adapter = new HomeAdapter(getContext(), homes);

@@ -125,9 +125,10 @@ public class UsersFragment extends Fragment {
                         User user = snapshot.getValue(User.class);
 
                         Log.i(TAG, "USER ID: " + user.getId() + " name: " + user.getUsername() + "Firebase User: " + firebaseUser.getUid());
-                        assert user != null;
+                        assert user!= null;
                         assert firebaseUser != null;
-                        if (!user.getId().equals(firebaseUser.getUid())) {
+                        Log.i(TAG, user.getId() + firebaseUser.getUid());
+                        if (user.getId() != null && !user.getId().equals(firebaseUser.getUid())) {
                             mUsers.add(user);
                         }
                     }

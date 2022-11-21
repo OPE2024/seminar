@@ -98,6 +98,7 @@ public class MessageActivity extends AppCompatActivity {
         userid = intent.getStringExtra("userid");
         Log.i(TAG, "Gotten user: " + userid);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        Log.i(TAG, "Firebase user: " + firebaseUser.getDisplayName());
 
         if(intent.hasExtra("listingId")){
             String listingId = intent.getStringExtra("listingId");
@@ -259,19 +260,23 @@ public class MessageActivity extends AppCompatActivity {
         mChat = new ArrayList<>();
 
         dbReference = FirebaseDatabase.getInstance().getReference("Chats");
+        Log.i(TAG, "reading>>>");
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot datSnapshot) {
                 mChat.clear();
                 for (DataSnapshot snapshot : datSnapshot.getChildren()) {
                     Chat chat = snapshot.getValue(Chat.class);
+                    Log.i(TAG, "Chat: " + chat.getMessage());
                     if (chat.getReceiver().equals(myid) && chat.getSender().equals(userid) ||
                             chat.getReceiver().equals(userid) && chat.getSender().equals(myid)){
                         mChat.add(chat);
                     }
 
                     messageAdapter = new MessageAdapter(MessageActivity.this, mChat, imageurl);
+                    Log.i(TAG, "Gets here");
                     recyclerView.setAdapter(messageAdapter);
+                    Log.i(TAG, "Gets here too");
                 }
             }
 

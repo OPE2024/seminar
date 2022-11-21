@@ -97,15 +97,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
 
-        if (position == mChat.size()-1) {
-            if (chat.isIsseen()) {
-                holder.tvSeen.setText("Seen");
-            } else {
-                holder.tvSeen.setText("Delivered");
-            }
-        } else {
-            holder.tvSeen.setVisibility(View.GONE);
-        }
+        Log.i(TAG, "Holder: " + holder);
+//        if (holder != null) {
+//            if (position == mChat.size() - 1) {
+//                if (chat.isIsseen()) {
+//                    holder.tvSeen.setText("Seen");
+//                } else {
+//                    holder.tvSeen.setText("Delivered");
+//                }
+//            } else {
+//                holder.tvSeen.setVisibility(View.GONE);
+//            }
+//        }
+
 
     }
 

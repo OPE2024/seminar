@@ -38,6 +38,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
     boolean click = true;
     ImageView mapicon;
 
+    private String TAG = "HomeAdapter";
+
     public void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
     }
@@ -50,6 +52,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
     public HomeAdapter(Context context, List<Home>homes /*List<Home>homeListFiltered*/){
         this.context = context;
         this.homes = homes;
+        Log.i(TAG, " Homes: " + homes.toString());
         // this.homeListFiltered = homeListFiltered;
     }
 
@@ -164,7 +167,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, MessageActivity.class);
-                intent.putExtra("userid", "WymgYKwO0Nbr2kSPBy6poI20Qj73");
+                intent.putExtra("userid", "mo9lw9ZrdATJaJ6ZRUFcWf1HIgs1");
                 intent.putExtra("listingId", data.getListing_id());
                 context.startActivity(intent);
             }
@@ -214,6 +217,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
         }
 
         public void bind(Home home){
+
             tvTitle.setText(home.getName());
             tvPropertyType.setText(home.getProperty_type());
             tvLocation.setText(home.getLine());

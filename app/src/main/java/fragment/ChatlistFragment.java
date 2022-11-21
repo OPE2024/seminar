@@ -112,7 +112,7 @@ public class ChatlistFragment extends Fragment {
                     //display 1 user from chats
                     for (String id : usersList){
                         Log.i(TAG, "ID: " + id);
-                        if (user.getId().equals(id)){
+                        if (user.getId() != null && user.getId().equals(id)){
                             Log.i(TAG, "USER ID: " + user.getId());
                             if (mUsers.size() != 0){
                                 //CHECK THIS LATER
